@@ -21,6 +21,35 @@
             <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success edit_book_#{@book.id}" %></td>
             <td><%= link_to 'Destroy', @book, method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger destroy_book_#{@book.id}"%></td>
             <% end %>
+            <% if @book.favorited_by?(current_user) %>
+            <td><%= link_to book_favorites_path(@book), method: :delete do %>
+                ❤ <%= @book.favorites.count %> いいね
+                <% end %>
+            </td>
+            <% else %>
+            <td><%= link_to book_favorites_path(@book), method: :post do %>
+                ♡ <%= @book.favorites.count %> いいね
+                <% end %>
+            </td>
+            <% end %>
+        </tr>
+        <tr>
+          <td>コメント件数: <%= @book.comments.count %></td>
+          <% @book.comments.each do |comment| %>
+          <td>
+            <%= image_tag comment.user.get_profile_image, size:"100x100" %><br>
+            <%= comment.user.name %>
+            <%= comment.created_at.strftime('%Y/%m/%d') %><%= comment.comment %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <%= form_with model: [@book, @comment] do |f| %>
+            <%= f.text_area :comment, rows: '5', placeholder: "Your comment" %><br>
+            <%= f.submit "Send" %>
+            <% end %>
+          </td>
         </tr>
       </table>
     </div>
