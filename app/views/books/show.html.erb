@@ -32,14 +32,19 @@
                 <% end %>
             </td>
             <% end %>
+            <td>
+              コメント数: <%= @book.comments.count %>
+            </td>
         </tr>
         <tr>
-          <td>コメント件数: <%= @book.comments.count %></td>
-          <% @book.comments.each do |comment| %>
           <td>
-            <%= image_tag comment.user.get_profile_image, size:"100x100" %><br>
+            <% @book.comments.each do |comment| %>
+            <%= image_tag comment.user.get_profile_image, size:"30x30" %><br>
             <%= comment.user.name %>
             <%= comment.created_at.strftime('%Y/%m/%d') %><%= comment.comment %>
+            <% if comment.user == current_user %>
+              <%= link_to "destroy", book_comment_path(comment.book, comment), method: :delete %><br>
+            <% end %>
             <% end %>
           </td>
         </tr>
